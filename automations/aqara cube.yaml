@@ -208,6 +208,7 @@ actions:
           - conditions: "{{ action == 'tap' }}"
             sequence: !input double_tap
 
+    - choose:
           - conditions: "{{ side == 1 }}"
             sequence: !input side_1
           - conditions: "{{ side == 2 }}"
