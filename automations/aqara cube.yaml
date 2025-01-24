@@ -218,36 +218,38 @@ actions:
       value_template: >
           {{ action == "flip90" or action == "flip180" }}
       sequence:
-          choose:
-              - conditions: "{{ side == 1 }}"
-                sequence: !input "side_1"
-              - conditions: "{{ side == 2 }}"
-                sequence: !input "side_2"
-              - conditions: "{{ side == 3 }}"
-                sequence: !input "side_3"
-              - conditions: "{{ side == 4 }}"
-                sequence: !input "side_4"
-              - conditions: "{{ side == 5 }}"
-                sequence: !input "side_5"
-              - conditions: "{{ side == 6 }}"
-                sequence: !input "side_6"
+          - alias: Side Actions
+            choose:
+                - conditions: "{{ side == 1 }}"
+                  sequence: !input "side_1"
+                - conditions: "{{ side == 2 }}"
+                  sequence: !input "side_2"
+                - conditions: "{{ side == 3 }}"
+                  sequence: !input "side_3"
+                - conditions: "{{ side == 4 }}"
+                  sequence: !input "side_4"
+                - conditions: "{{ side == 5 }}"
+                  sequence: !input "side_5"
+                - conditions: "{{ side == 6 }}"
+                  sequence: !input "side_6"
 
     - alias: Other Actions
       sequence:
-          choose:
-              - conditions: '{{ action == "tap" }}'
-                sequence: !input "double_tap"
-              - conditions: '{{ action == "flip_90" }}'
-                sequence: !input "flip_90"
-              - conditions: '{{ action == "flip_180" }}'
-                sequence: !input "flip_180"
-              - conditions: '{{ action == "rotate_right" }}'
-                sequence: !input "rotate_right"
-              - conditions: '{{ action == "rotate_left" }}'
-                sequence: !input "rotate_left"
-              - conditions: '{{ action == "shake" }}'
-                sequence: !input "shake"
-              - conditions: '{{ action == "throw" }}'
-                sequence: !input "throw"
+          - alias: Other Actions
+            choose:
+                - conditions: '{{ action == "tap" }}'
+                  sequence: !input "double_tap"
+                - conditions: '{{ action == "flip_90" }}'
+                  sequence: !input "flip_90"
+                - conditions: '{{ action == "flip_180" }}'
+                  sequence: !input "flip_180"
+                - conditions: '{{ action == "rotate_right" }}'
+                  sequence: !input "rotate_right"
+                - conditions: '{{ action == "rotate_left" }}'
+                  sequence: !input "rotate_left"
+                - conditions: '{{ action == "shake" }}'
+                  sequence: !input "shake"
+                - conditions: '{{ action == "throw" }}'
+                  sequence: !input "throw"
 
 mode: single
