@@ -212,6 +212,7 @@ actions:
           action: "{{ trigger.payload_json.action }}"
           last_side_val: "{{ trigger.payload_json.action_from_side }}"
           side: "{{ trigger.payload_json.side }}"
+
     - choose:
           - conditions:
                 - condition: template
