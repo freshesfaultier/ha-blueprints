@@ -11,20 +11,7 @@ blueprint:
             icon: mdi:alert-box
             collapsed: false
             description: >
-                This blueprint has been known to freak out when there are spaces or odd characters
-                  in the MQTT Topic. Make sure there are no spaces, ONLY a single word,
-                  and ONLY A thru Z, a thru z, and 0 thru 9 in the topic.
-                  (```  /  ``` is ok between device and topic)
-
-                  If there are other characters, you will need to change the name of the cube to
-                  remove those characters.
-
-                  ### IF YOU SEE --> TemplateError: Must provide a device or entity ID
-
-                  If you get an error like that, The friendly_name in Z2M likely does not match the 
-                  friendly_name on HA. To fix go into the Z2M ```Open web UI``` and set the 
-                  friendly_name there. Setting this in just HA or in Z2M without ticking the update HA
-                  box will cause this. See the blueprint documentation page for details.
+                mqtt topic
             input:
                 topic:
                     name: Topic
@@ -40,15 +27,7 @@ blueprint:
             icon: mdi:alert-octagon-outline
             collapsed: true
             description: >
-                This input was added by user request. With it you can add your own condition.
-                  If you only want the cube to work like this in the morning,
-                  then after 6pm you want it to do different actions, add a condition that
-                  will only let this run from 6am until 6pm. Then have another copy of
-                  the blueprint that will only run from 6pm until 6am. (for example)
-
-                  Any valid conditions you can dream up, you should be able to add here.
-
-                  Leave it as the default of you don't want to add a condition of your own.
+                Leave it as the default of you don't want to add a condition of your own.
             input:
                 additional_conditions:
                     name: Additional conditions
