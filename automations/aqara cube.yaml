@@ -202,52 +202,63 @@ conditions:
 
     - alias: User pick
       condition: !input additional_conditions
-
-actions:
-    - alias: Trigger-Daten ausgeben
-      event: debug_cube
-      event_data:
-          trigger_payload_json: "{{ trigger.payload_json }}"
-          operation_mode: "{{ trigger.payload_json.operation_mode }}"
-          action: "{{ trigger.payload_json.action }}"
-          last_side_val: "{{ trigger.payload_json }}"
-          side: "{{ trigger.payload_json.side }}"
-
-    - alias: "Side Actions"
-      condition: template
-      value_template: >
-          {{ action == "flip90" or action == "flip180" }}
-      choose:
-          - conditions: "{{ side == 1 }}"
-            sequence: !input "side_1"
-          - conditions: "{{ side == 2 }}"
-            sequence: !input "side_2"
-          - conditions: "{{ side == 3 }}"
-            sequence: !input "side_3"
-          - conditions: "{{ side == 4 }}"
-            sequence: !input "side_4"
-          - conditions: "{{ side == 5 }}"
-            sequence: !input "side_5"
-          - conditions: "{{ side == 6 }}"
-            sequence: !input "side_6"
-
-    - alias: Other Actions
-      sequence:
-          - alias: Other Actions
-            choose:
-                - conditions: '{{ action == "tap" }}'
-                  sequence: !input "double_tap"
-                - conditions: '{{ action == "flip_90" }}'
-                  sequence: !input "flip_90"
-                - conditions: '{{ action == "flip_180" }}'
-                  sequence: !input "flip_180"
-                - conditions: '{{ action == "rotate_right" }}'
-                  sequence: !input "rotate_right"
-                - conditions: '{{ action == "rotate_left" }}'
-                  sequence: !input "rotate_left"
-                - conditions: '{{ action == "shake" }}'
-                  sequence: !input "shake"
-                - conditions: '{{ action == "throw" }}'
-                  sequence: !input "throw"
+      actions:
+          - alias: Trigger-Daten ausgeben
+            event: debug_cube
+            event_data:
+                trigger_payload_json: "{{ trigger.payload_json }}"
+                operation_mode: "{{ trigger.payload_json.operation_mode }}"
+                action: "{{ trigger.payload_json.action }}"
+                last_side_val: "{{ trigger.payload_json.action_from_side }}"
+                side: "{{ trigger.payload_json.side }}"
+          - choose:
+                - conditions:
+                      - condition: template
+                        value_template: "{{ action == 'rotate_right' }}"
+                  sequence: !input rotate_right
+                - conditions:
+                      - condition: template
+                        value_template: "{{ action == 'rotate_left' }}"
+                  sequence: !input rotate_left
+                - conditions:
+                      - condition: template
+                        value_template: "{{ action == 'flip90' }}"
+                  sequence: !input flip_90
+                - conditions:
+                      - condition: template
+                        value_template: "{{ action == 'flip180' }}"
+                  sequence: !input flip_180
+                - conditions:
+                      - condition: template
+                        value_template: "{{ action == 'shake' }}"
+                  sequence: !input shake
+                - conditions:
+                      - condition: template
+                        value_template: "{{ action == 'throw' }}"
+                  sequence: !input throw
+                - conditions:
+                      - condition: template
+                        value_template: "{{ side == 1 }}"
+                  sequence: !input side_1
+                - conditions:
+                      - condition: template
+                        value_template: "{{ side == 2 }}"
+                  sequence: !input side_2
+                - conditions:
+                      - condition: template
+                        value_template: "{{ side == 3 }}"
+                  sequence: !input side_3
+                - conditions:
+                      - condition: template
+                        value_template: "{{ side == 4 }}"
+                  sequence: !input side_4
+                - conditions:
+                      - condition: template
+                        value_template: "{{ side == 5 }}"
+                  sequence: !input side_5
+                - conditions:
+                      - condition: template
+                        value_template: "{{ side == 6 }}"
+                  sequence: !input side_6
 
 mode: single
