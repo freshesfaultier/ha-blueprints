@@ -39,7 +39,7 @@ blueprint:
                         condition:
 
         side_actions:
-            name: 🫳 ACTION MODE ONLY 🫳 Side 1 Group 1 actions 🍎
+            name: Side Actions
             icon: mdi:dice-3
             collapsed: true
             description: >
