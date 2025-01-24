@@ -1,0 +1,265 @@
+blueprint:
+    name: Simple Aqara Cube Automation
+    description: Control your Aqara Cube T1Pro
+    domain: automation
+    homeassistant:
+        min_version: 2025.1.0
+
+    input:
+        required_input:
+            name: Required input 👀
+            icon: mdi:alert-box
+            collapsed: false
+            description: >
+                This blueprint has been known to freak out when there are spaces or odd characters
+                  in the MQTT Topic. Make sure there are no spaces, ONLY a single word,
+                  and ONLY A thru Z, a thru z, and 0 thru 9 in the topic.
+                  (```  /  ``` is ok between device and topic)
+
+                  If there are other characters, you will need to change the name of the cube to
+                  remove those characters.
+
+                  ### IF YOU SEE --> TemplateError: Must provide a device or entity ID
+
+                  If you get an error like that, The friendly_name in Z2M likely does not match the 
+                  friendly_name on HA. To fix go into the Z2M ```Open web UI``` and set the 
+                  friendly_name there. Setting this in just HA or in Z2M without ticking the update HA
+                  box will cause this. See the blueprint documentation page for details.
+            input:
+                topic:
+                    name: Topic
+                    description: >
+                        The main MQTT Topic for your cube.
+                    default: "zigbee2mqtt/?"
+                    selector:
+                        text:
+                            multiline: false
+
+        optional_conditions:
+            name: Optional conditions🤓
+            icon: mdi:alert-octagon-outline
+            collapsed: true
+            description: >
+                This input was added by user request. With it you can add your own condition.
+                  If you only want the cube to work like this in the morning,
+                  then after 6pm you want it to do different actions, add a condition that
+                  will only let this run from 6am until 6pm. Then have another copy of
+                  the blueprint that will only run from 6pm until 6am. (for example)
+
+                  Any valid conditions you can dream up, you should be able to add here.
+
+                  Leave it as the default of you don't want to add a condition of your own.
+            input:
+                additional_conditions:
+                    name: Additional conditions
+                    description: |
+                        Extra conditions you may want to add to this automation 
+                        (Example: Home occupied, TV on, etc)
+                    default: []
+                    selector:
+                        condition:
+
+        side_actions:
+            name: 🫳 ACTION MODE ONLY 🫳 Side 1 Group 1 actions 🍎
+            icon: mdi:dice-3
+            collapsed: true
+            description: >
+                Aktionen mit Würfel Seiten
+            input:
+                side_1:
+                    name: Seite 1
+                    description: Face 1 is the one with the 'Aqara' LOGO
+                    default: []
+                    selector:
+                        action: {}
+                side_2:
+                    name: Seite 2
+                    default: []
+                    selector:
+                        action: {}
+                side_3:
+                    name: Seite 3
+                    default: []
+                    selector:
+                        action: {}
+                side_4:
+                    name: Seite 4
+                    default: []
+                    selector:
+                        action: {}
+                side_5:
+                    name: seite 5
+                    default: []
+                    selector:
+                        action: {}
+                side_6:
+                    name: Seite 6
+                    default: []
+                    selector:
+                        action: {}
+
+        other_actions:
+            name: Andere Aktionen
+            icon: mdi:dice-multiple
+            collapsed: true
+            description: >
+                Other Cube Actions
+            input:
+                double_tap:
+                    name: Double tap
+                    default: []
+                    selector:
+                        action: {}
+                flip_90:
+                    name: flip 90 degrees
+                    default: []
+                    selector:
+                        action: {}
+                flip_180:
+                    name: flip 180 degrees
+                    default: []
+                    selector:
+                        action: {}
+                rotate_right:
+                    name: rotate right
+                    default: []
+                    selector:
+                        action: {}
+                rotate_left:
+                    name: rotate left
+                    default: []
+                    selector:
+                        action: {}
+                shake:
+                    name: shake
+                    default: []
+                    selector:
+                        action: {}
+                throw:
+                    name: throw
+                    default: []
+                    selector:
+                        action: {}
+
+triggers:
+    - platform: mqtt
+      topic: !input topic
+
+variables:
+    # Get the action command.
+    action: >
+        {% if trigger.payload_json.action is defined %}
+          {{ trigger.payload_json.action }}
+        {% else %}
+          none
+        {% endif %}
+
+    # Get the angle.
+    angle: >
+        {% if trigger.payload_json.action_angle is number %}
+          {{ trigger.payload_json.action_angle | float(0.0) }}
+        {% else %}
+          0.0
+        {% endif %}
+
+    # Get the side.
+    side: >
+        {% if trigger.payload_json.side is number %}
+          {{ trigger.payload_json.side | int(0) }}
+        {% else %}
+          0
+        {% endif %}
+
+    # Get the side.
+    last_side: >
+        {% if trigger.payload_json.action_from_side is number %}
+          {{ trigger.payload_json.action_from_side | int(0) }}
+        {% else %}
+          0
+        {% endif %}
+
+    # Get the operation_mode.
+    op_mode: >
+        {% if trigger.payload_json.operation_mode is defined %}
+          {{ trigger.payload_json.operation_mode }}
+        {% else %}
+          none
+        {% endif %}
+
+    # Get the topic as a variable.
+    topic_var: !input topic
+
+   
+
+ 
+
+    # Get the last_side for use in logic below.
+    last_side: >
+        {# The first time it will not be there, so make sure its 0 instead of undefined. #}
+        {% if not num_ha_val in ["undefined", "unknown", "unavailable", "none", "null", ""] %}
+          {{ num_ha_val }}
+        {% else %}
+          0
+        {% endif %}
+
+conditions:
+    - alias: Check for valid Action Mode triggers
+      condition: template
+      value_template: >
+          {{ trigger.payload_json is defined and
+            trigger.payload_json.operation_mode is defined and
+            trigger.payload_json.action is defined and
+            trigger.payload_json.operation_mode == "action_mode" and
+            trigger.payload_json.action in ["rotate_right", "rotate_left",
+            "flip90", "flip180", "slide", "tap", "shake", "throw"] }}
+
+    - alias: User pick
+      condition: !input additional_conditions
+
+actions:
+    - alias: Trigger-Daten ausgeben
+      event: debug_cube
+      event_data:
+          trigger_payload_json: "{{ trigger.payload_json }}"
+          operation_mode: "{{ trigger.payload_json.operation_mode }}"
+          action: "{{ trigger.payload_json.action }}"
+          last_side: "{{ trigger.payload_json }}"
+          side: "{{ trigger.payload_json.side }}"
+
+    - alias: "Choose Action Mode or Scene Mode"
+      choose:
+          - conditions: '{{ action == "flip90" or action == "flip180" }}'
+            sequence:
+                - alias: Side Actions
+                  choose:
+                      - conditions: "{{ side == 1 }}"
+                        sequence: !input "side_1"
+                      - conditions: "{{ side == 2 }}"
+                        sequence: !input "side_2"
+                      - conditions: "{{ side == 3 }}"
+                        sequence: !input "side_3"
+                      - conditions: "{{ side == 4 }}"
+                        sequence: !input "side_4"
+                      - conditions: "{{ side == 5 }}"
+                        sequence: !input "side_5"
+                      - conditions: "{{ side == 6 }}"
+                        sequence: !input "side_6"
+          - sequence:
+                - alias: Scene Selection
+                  choose:
+                      - conditions: '{{ action == "tap" }}'
+                        sequence: !input "double_tap"
+                      - conditions: '{{ action == "flip_90" }}'
+                        sequence: !input "flip_90"
+                      - conditions: '{{ action == "flip_180" }}'
+                        sequence: !input "flip_180"
+                      - conditions: '{{ action == "rotate_right" }}'
+                        sequence: !input "rotate_right"
+                      - conditions: '{{ action == "rotate_left" }}'
+                        sequence: !input "rotate_left"
+                      - conditions: '{{ action == "shake" }}'
+                        sequence: !input "shake"
+                      - conditions: '{{ action == "throw" }}'
+                        sequence: !input "throw"
+
+mode: single
