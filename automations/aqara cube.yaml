@@ -193,13 +193,9 @@ actions:
           side: "{{ trigger.payload_json.side }}"
 
     - choose:
-          - conditions:
-                - condition: template
-                  value_template: "{{ action == 'rotate_right' }}"
+          - conditions: "{{ action == 'rotate_right' }}"
             sequence: !input rotate_right
-          - conditions:
-                - condition: template
-                  value_template: "{{ action == 'rotate_left' }}"
+          - conditions: "{{ action == 'rotate_left' }}"
             sequence: !input rotate_left
           - conditions:
                 - condition: template
