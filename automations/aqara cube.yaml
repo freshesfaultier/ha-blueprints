@@ -214,7 +214,7 @@ actions:
           side: "{{ trigger.payload_json.side }}"
 
     - alias: "Side Actions"
-      conditions: '{{ action == "flip90" or action == "flip180" }}'
+      conditions: "{{ action == flip90 or action == flip180 }}"
       sequence:
           choose:
               - conditions: "{{ side == 1 }}"
