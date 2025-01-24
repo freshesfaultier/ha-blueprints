@@ -197,45 +197,28 @@ actions:
             sequence: !input rotate_right
           - conditions: "{{ action == 'rotate_left' }}"
             sequence: !input rotate_left
-          - conditions:
-                - condition: template
-                  value_template: "{{ action == 'flip90' }}"
+          - conditions: "{{ action == 'flip90' }}"
             sequence: !input flip_90
-          - conditions:
-                - condition: template
-                  value_template: "{{ action == 'flip180' }}"
+          - conditions: "{{ action == 'flip180' }}"
             sequence: !input flip_180
-          - conditions:
-                - condition: template
-                  value_template: "{{ action == 'shake' }}"
+          - conditions: "{{ action == 'shake' }}"
             sequence: !input shake
-          - conditions:
-                - condition: template
-                  value_template: "{{ action == 'throw' }}"
+          - conditions: "{{ action == 'throw' }}"
             sequence: !input throw
-          - conditions:
-                - condition: template
-                  value_template: "{{ side == 1 }}"
+          - conditions: "{{ action == 'tap' }}"
+            sequence: !input double_tap
+
+          - conditions: "{{ side == 1 }}"
             sequence: !input side_1
-          - conditions:
-                - condition: template
-                  value_template: "{{ side == 2 }}"
+          - conditions: "{{ side == 2 }}"
             sequence: !input side_2
-          - conditions:
-                - condition: template
-                  value_template: "{{ side == 3 }}"
+          - conditions: "{{ side == 3 }}"
             sequence: !input side_3
-          - conditions:
-                - condition: template
-                  value_template: "{{ side == 4 }}"
+          - conditions: "{{ side == 4 }}"
             sequence: !input side_4
-          - conditions:
-                - condition: template
-                  value_template: "{{ side == 5 }}"
+          - conditions: "{{ side == 5 }}"
             sequence: !input side_5
-          - conditions:
-                - condition: template
-                  value_template: "{{ side == 6 }}"
+          - conditions: "{{ side == 6 }}"
             sequence: !input side_6
 
 mode: single
