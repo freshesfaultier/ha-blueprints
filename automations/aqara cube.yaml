@@ -141,7 +141,7 @@ blueprint:
                     selector:
                         action: {}
 
-triggers:
+trigger:
     - platform: mqtt
       topic: !input topic
 
