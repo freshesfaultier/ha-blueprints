@@ -208,7 +208,8 @@ actions:
           - conditions: "{{ action == 'tap' }}"
             sequence: !input double_tap
 
-    - choose:
+    - conditions: "{{ action == 'flip90' or action == 'flip180' }}"
+      choose:
           - conditions: "{{ side == 1 }}"
             sequence: !input side_1
           - conditions: "{{ side == 2 }}"
