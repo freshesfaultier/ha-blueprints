@@ -216,7 +216,7 @@ actions:
     - alias: "Side Actions"
       condition: template
       value_template: >
-          "{{ action == "flip90" or action == "flip180" }}"
+          {{ action == "flip90" or action == "flip180" }}
       sequence:
           choose:
               - conditions: "{{ side == 1 }}"
