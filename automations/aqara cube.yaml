@@ -208,19 +208,22 @@ actions:
           - conditions: "{{ action == 'tap' }}"
             sequence: !input double_tap
 
-    - conditions: "{{ action == 'flip90' or action == 'flip180' }}"
+    - alias: Choose Side
       choose:
-          - conditions: "{{ side == 1 }}"
-            sequence: !input side_1
-          - conditions: "{{ side == 2 }}"
-            sequence: !input side_2
-          - conditions: "{{ side == 3 }}"
-            sequence: !input side_3
-          - conditions: "{{ side == 4 }}"
-            sequence: !input side_4
-          - conditions: "{{ side == 5 }}"
-            sequence: !input side_5
-          - conditions: "{{ side == 6 }}"
-            sequence: !input side_6
+          - conditions: "{{ action == 'flip90' or action == 'flip180' }}"
+            sequence:
+                choose:
+                    - conditions: "{{ side == 1 }}"
+                      sequence: !input side_1
+                    - conditions: "{{ side == 2 }}"
+                      sequence: !input side_2
+                    - conditions: "{{ side == 3 }}"
+                      sequence: !input side_3
+                    - conditions: "{{ side == 4 }}"
+                      sequence: !input side_4
+                    - conditions: "{{ side == 5 }}"
+                      sequence: !input side_5
+                    - conditions: "{{ side == 6 }}"
+                      sequence: !input side_6
 
 mode: single
