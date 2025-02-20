@@ -73,7 +73,7 @@ blueprint:
                 action:
             default: []
 
-mode: parallel
+mode: restart
 max: 10
 
 triggers:
